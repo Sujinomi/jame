@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Surprise</title>
+    <link rel="stylesheet" href="main.css">
+    <script defer src="main.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: pink;
+            position: relative;
+        }
+        .floating {
+            position: absolute;
+            width: 150px;
+            animation: floatAnimation 20s infinite linear alternate;
+        }
+        @keyframes floatAnimation {
+            0% { top: 10vh; left: 10vw; }
+            25% { top: 50vh; left: 90vw; }
+            50% { top: 80vh; left: 40vw; }
+            75% { top: 30vh; left: 10vw; }
+            100% { top: 60vh; left: 70vw; }
+        }
+        .hidden {
+            display: none;
+        }
+        #messageContainer {
+            text-align: center;
+            position: relative;
+        }
+        .textBubble {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        #grabButton {
+            margin-top: 10px;
+            padding: 10px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .flower {
+            position: absolute;
+            width: 50px;
+            opacity: 0;
+            transition: transform 2s ease-out, opacity 2s ease-out;
+            animation: floatFlowers 5s infinite alternate ease-in-out;
+        }
+        @keyframes floatFlowers {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-30px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating GIF/Image -->
+    <img id="floatingImage" src="https://imgur.com/8v5HW5z.gif" alt="Floating" class="floating">
+
+    <!-- Centered Image/GIF (Initially Hidden) -->
+    <img id="centeredImage" src="https://imgur.com/ndj0XXo.gif" alt="Centered" class="hidden">
+
+    <!-- Message Section (Initially Hidden) -->
+    <div id="messageContainer" class="hidden">
+        <img id="messageImage" src="https://imgur.com/3zU3gI1.png" style="width: 250px; height: 250px; border-radius: 200px;" alt="Message"><br>
+        <div class="textBubble">Happy Valentine's Day! Thank you for existing!</div><br>
+        <a href="index.html"><button id="grabButton">Grab this</button></a>
+    </div>
+
+    <!-- Flower Animation Section (Initially Hidden) -->
+    <div id="flowerContainer" class="hidden">
+        <iframe src="flowers.html" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        document.getElementById("floatingImage").addEventListener("click", function() {
+            this.style.display = "none";
+            let centeredImage = document.getElementById("centeredImage");
+            centeredImage.classList.remove("hidden");
+            setTimeout(() => {
+                centeredImage.classList.add("hidden");
+                document.getElementById("messageContainer").classList.remove("hidden");
+                releaseFlowers();
+            }, 5000);
+        });
+
+        document.getElementById("grabButton").addEventListener("click", function() {
+            document.getElementById("messageContainer").classList.add("hidden");
+            document.getElementById("flowerContainer").classList.remove("hidden");
+        });
+
+function releaseFlowers() {
+    let container = document.body;
+    for (let i = 0; i < 50; i++) {
+        let flower = document.createElement("img");
+        flower.src = "https://imgur.com/yFB9C4V.png";
+        flower.classList.add("flower");
+
+        // Set random starting position
+        let startX = Math.random() * window.innerWidth;
+        let startY = Math.random() * window.innerHeight;
+        flower.style.left = `${startX}px`;
+        flower.style.top = `${startY}px`;
+
+        container.appendChild(flower);
+
+        setTimeout(() => {
+            flower.style.opacity = "1";
+        }, 100);
+
+        // Make flowers float randomly across the screen
+        setInterval(() => {
+            let newX = Math.random() * window.innerWidth;
+            let newY = Math.random() * window.innerHeight;
+            flower.style.transform = `translate(${newX - startX}px, ${newY - startY}px)`;
+        }, Math.random() * 5000 + 3000); // Random interval between 3s-8s for natural movement
+    }
+}
+
+    </script>
+</body>
+</html>
