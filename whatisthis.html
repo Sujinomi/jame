@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ano to</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: pink;
+            position: relative;
+        }
+        .floating {
+            position: absolute;
+            width: 150px;
+            animation: floatAnimation 20s infinite linear alternate;
+            cursor: pointer;
+        }
+        @keyframes floatAnimation {
+            0% { top: 10vh; left: 10vw; }
+            25% { top: 50vh; left: 90vw; }
+            50% { top: 80vh; left: 40vw; }
+            75% { top: 30vh; left: 10vw; }
+            100% { top: 60vh; left: 70vw; }
+        }
+        .hidden {
+            display: none;
+        }
+        #messageContainer {
+            text-align: center;
+            position: relative;
+        }
+        .textBubble {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            min-height: 50px;
+        }
+        #grabButton {
+            margin-top: 10px;
+            padding: 10px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .typing {
+            display: inline-block;
+            white-space: pre-wrap;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        /* Floating flowers */
+        .flower {
+            position: absolute;
+            width: 50px;
+            opacity: 0;
+            transition: transform 2s ease-out, opacity 2s ease-out;
+            animation: floatFlowers 5s infinite alternate ease-in-out;
+        }
+        @keyframes floatFlowers {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-30px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating GIF/Image -->
+    <img id="floatingImage" src="https://imgur.com/8v5HW5z.gif" alt="Floating" class="floating">
+
+    <!-- Centered Image/GIF (Initially Hidden) -->
+    <img id="centeredImage" src="https://imgur.com/ndj0XXo.gif" alt="Centered" class="hidden">
+
+    <!-- Message Section (Initially Hidden) -->
+    <div id="messageContainer" class="hidden">
+        <img id="messageImage" src="https://imgur.com/3zU3gI1.png" style="width: 250px; height: 250px; border-radius: 200px;" alt="Message"><br>
+        <div class="textBubble">
+            <span id="typingText" class="typing"></span>
+        </div><br>
+        <a href="index.html"><button id="grabButton">Grab this</button></a>
+    </div>
+
+    <script>
+        const messageText = "to a soafer special person, happy valentine's day!\nI will forever be soafer grateful that I was able to get this soafer close to you.\nvalentines isn't really only about lovers,\nit's also about the relationships that makes you feel special, heard and seen.\nand that's exactly how you are to me,\n and I will forever treasure that.\nI will always look forward to walking with you and there will always be a seat for you in my table.\n\nTold you there's no reason to feel inggit or lonely 😝\nYOU'RE LOVED BY A LOT AND BY THOSE WHO REALLY MATTER !!\nalways thankful for you, jame!";
+        
+        function typeMessage(index = 0) {
+            if (index < messageText.length) {
+                document.getElementById("typingText").innerHTML += messageText.charAt(index);
+                setTimeout(() => typeMessage(index + 1), 30); // Typing speed (30ms per letter)
+            }
+        }
+
+        function releaseFlowers() {
+        let container = document.body;
+        let messageBox = document.getElementById("messageContainer").getBoundingClientRect();
+        
+        for (let i = 0; i < 50; i++) {
+            let flower = document.createElement("img");
+            flower.src = "https://imgur.com/yFB9C4V.png";
+            flower.classList.add("flower");
+
+            let startX, startY;
+            do {
+                startX = Math.random() * window.innerWidth;
+                startY = Math.random() * window.innerHeight;
+            } while (
+                startX > messageBox.left - 50 && startX < messageBox.right + 50 &&
+                startY > messageBox.top - 50 && startY < messageBox.bottom + 50
+            ); 
+            // Ensures flowers spawn at least 50px away from the message container
+
+            flower.style.left = `${startX}px`;
+            flower.style.top = `${startY}px`;
+
+            container.appendChild(flower);
+
+            setTimeout(() => {
+                flower.style.opacity = "1";
+            }, 100);
+
+            // Make flowers float randomly
+            setInterval(() => {
+                let newX = Math.random() * window.innerWidth;
+                let newY = Math.random() * window.innerHeight;
+                flower.style.transform = `translate(${newX - startX}px, ${newY - startY}px)`;
+            }, Math.random() * 5000 + 3000);
+        }
+    }
+
+        document.getElementById("floatingImage").addEventListener("click", function() {
+            this.style.display = "none";
+            let centeredImage = document.getElementById("centeredImage");
+            centeredImage.classList.remove("hidden");
+            setTimeout(() => {
+                centeredImage.classList.add("hidden");
+                document.getElementById("messageContainer").classList.remove("hidden");
+                typeMessage();
+                releaseFlowers(); // Bring back the floating flowers
+            }, 3000); // Delay before typing starts
+        });
+
+        document.getElementById("grabButton").addEventListener("click", function() {
+            document.getElementById("messageContainer").classList.add("hidden");
+        });
+    </script>
+</body>
+</html>
